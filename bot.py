@@ -5,9 +5,9 @@ import os
 import re
 from datetime import datetime
 
-JAP_API_KEY    = "ec2fb6c8f5a4ea7ba6cf532e87a09895"
-JAP_API_URL    = "https://justanotherpanel.com/api"
-JAP_SERVICE    = 7400
+JAP_API_KEY    = "6851062994d5e56fc89a8d43b530e1c3"
+JAP_API_URL    = "https://smmstudia.com/api"
+JAP_SERVICE    = 145
 QUANTITY_MIN   = 1400
 QUANTITY_MAX   = 1600
 TG_CHANNEL     = "growsmm"
