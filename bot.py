@@ -5,9 +5,9 @@ import os
 import re
 from datetime import datetime
 
-JAP_API_KEY    = "6851062994d5e56fc89a8d43b530e1c3"
-JAP_API_URL    = "https://smmstudia.com/api"
-JAP_SERVICE    = 145
+JAP_API_KEY    = "ec2fb6c8f5a4ea7ba6cf532e87a09895"
+JAP_API_URL    = "https://justanotherpanel.com/api"
+JAP_SERVICE    = 7400
 QUANTITY_MIN   = 1400
 QUANTITY_MAX   = 1600
 TG_CHANNEL     = "growsmm"
@@ -63,16 +63,16 @@ def create_jap_order(post_url):
         log(f"📥 Ответ JAP (raw): {resp.status_code} | {repr(resp.text[:300])}")
 
         if not resp.text.strip():
-            log("❌ Пустой ответ — проверьте API ключ или баланс")
+            log("❌ JAP вернул пустой ответ — проверьте баланс или API ключ")
             return
 
         data = resp.json()
         if "order" in data:
             log(f"✅ Заказ создан! ID: {data['order']} | Кол-во: {quantity} | {post_url}")
         elif "error" in data:
-            log(f"❌ Ошибка: {data['error']}")
+            log(f"❌ Ошибка JAP: {data['error']}")
         else:
-            log(f"⚠️  Неизвестный ответ: {data}")
+            log(f"⚠️  Неизвестный ответ JAP: {data}")
 
     except Exception as e:
         log(f"❌ Ошибка заказа: {e}")
@@ -80,15 +80,15 @@ def create_jap_order(post_url):
 def check_balance():
     try:
         resp = requests.post(JAP_API_URL, data={"key": JAP_API_KEY, "action": "balance"}, timeout=10)
-        log(f"📥 Баланс (raw): {resp.status_code} | {repr(resp.text[:200])}")
+        log(f"📥 Баланс ответ (raw): {resp.status_code} | {repr(resp.text[:200])}")
         if resp.text.strip():
             data = resp.json()
             if "balance" in data:
-                log(f"💰 Баланс: ${data['balance']} {data.get('currency','')}")
+                log(f"💰 Баланс JAP: ${data['balance']} {data.get('currency','')}")
             else:
                 log(f"⚠️  Ответ баланса: {data}")
         else:
-            log("❌ Пустой ответ на баланс")
+            log("❌ JAP вернул пустой ответ на баланс")
     except Exception as e:
         log(f"❌ Ошибка баланса: {e}")
 
