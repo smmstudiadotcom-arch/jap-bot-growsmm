@@ -5,7 +5,7 @@ import os
 import re
 from datetime import datetime
 
-JAP_API_KEY    = "041e5fa56080df264e6508e244542a3b"
+JAP_API_KEY    = "ec2fb6c8f5a4ea7ba6cf532e87a09895"
 JAP_API_URL    = "https://justanotherpanel.com/api"
 JAP_SERVICE    = 7400
 QUANTITY_MIN   = 1400
