@@ -63,16 +63,16 @@ def create_jap_order(post_url):
         log(f"📥 Ответ JAP (raw): {resp.status_code} | {repr(resp.text[:300])}")
 
         if not resp.text.strip():
-            log("❌ JAP вернул пустой ответ — проверьте баланс или API ключ")
+            log("❌ Пустой ответ — проверьте API ключ или баланс")
             return
 
         data = resp.json()
         if "order" in data:
             log(f"✅ Заказ создан! ID: {data['order']} | Кол-во: {quantity} | {post_url}")
         elif "error" in data:
-            log(f"❌ Ошибка JAP: {data['error']}")
+            log(f"❌ Ошибка: {data['error']}")
         else:
-            log(f"⚠️  Неизвестный ответ JAP: {data}")
+            log(f"⚠️  Неизвестный ответ: {data}")
 
     except Exception as e:
         log(f"❌ Ошибка заказа: {e}")
@@ -80,15 +80,15 @@ def create_jap_order(post_url):
 def check_balance():
     try:
         resp = requests.post(JAP_API_URL, data={"key": JAP_API_KEY, "action": "balance"}, timeout=10)
-        log(f"📥 Баланс ответ (raw): {resp.status_code} | {repr(resp.text[:200])}")
+        log(f"📥 Баланс (raw): {resp.status_code} | {repr(resp.text[:200])}")
         if resp.text.strip():
             data = resp.json()
             if "balance" in data:
-                log(f"💰 Баланс JAP: ${data['balance']} {data.get('currency','')}")
+                log(f"💰 Баланс: ${data['balance']} {data.get('currency','')}")
             else:
                 log(f"⚠️  Ответ баланса: {data}")
         else:
-            log("❌ JAP вернул пустой ответ на баланс")
+            log("❌ Пустой ответ на баланс")
     except Exception as e:
         log(f"❌ Ошибка баланса: {e}")
 
