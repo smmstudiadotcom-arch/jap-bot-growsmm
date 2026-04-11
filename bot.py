@@ -6,7 +6,7 @@ import re
 from datetime import datetime
 
 JAP_API_KEY    = "ec2fb6c8f5a4ea7ba6cf532e87a09895"
-JAP_API_URL    = "https://justanotherpanel.com/api"
+JAP_API_URL    = "https://justanotherpanel.com/api/v2"
 JAP_SERVICE    = 7400
 QUANTITY_MIN   = 1400
 QUANTITY_MAX   = 1600
@@ -61,34 +61,27 @@ def create_jap_order(post_url):
         log(f"📤 Отправляю заказ: service={JAP_SERVICE}, link={post_url}, quantity={quantity}")
         resp = requests.post(JAP_API_URL, data=payload, timeout=15)
         log(f"📥 Ответ JAP (raw): {resp.status_code} | {repr(resp.text[:300])}")
-
         if not resp.text.strip():
-            log("❌ JAP вернул пустой ответ — проверьте баланс или API ключ")
+            log("❌ Пустой ответ — проверьте API ключ или баланс")
             return
-
         data = resp.json()
         if "order" in data:
             log(f"✅ Заказ создан! ID: {data['order']} | Кол-во: {quantity} | {post_url}")
         elif "error" in data:
-            log(f"❌ Ошибка JAP: {data['error']}")
+            log(f"❌ Ошибка: {data['error']}")
         else:
-            log(f"⚠️  Неизвестный ответ JAP: {data}")
-
+            log(f"⚠️  Неизвестный ответ: {data}")
     except Exception as e:
         log(f"❌ Ошибка заказа: {e}")
 
 def check_balance():
     try:
         resp = requests.post(JAP_API_URL, data={"key": JAP_API_KEY, "action": "balance"}, timeout=10)
-        log(f"📥 Баланс ответ (raw): {resp.status_code} | {repr(resp.text[:200])}")
+        log(f"📥 Баланс (raw): {resp.status_code} | {repr(resp.text[:200])}")
         if resp.text.strip():
             data = resp.json()
             if "balance" in data:
-                log(f"💰 Баланс JAP: ${data['balance']} {data.get('currency','')}")
-            else:
-                log(f"⚠️  Ответ баланса: {data}")
-        else:
-            log("❌ JAP вернул пустой ответ на баланс")
+                log(f"💰 Баланс: ${data['balance']} {data.get('currency','')}")
     except Exception as e:
         log(f"❌ Ошибка баланса: {e}")
 
@@ -96,16 +89,13 @@ def main():
     log("🚀 Бот запущен!")
     log(f"📡 Канал: @{TG_CHANNEL} | Услуга: {JAP_SERVICE} | Кол-во: {QUANTITY_MIN}–{QUANTITY_MAX}")
     check_balance()
-
     last_id = load_last_post_id()
-
     if last_id == 0:
         latest_id, _ = get_latest_post()
         if latest_id:
             save_last_post_id(latest_id)
             last_id = latest_id
             log(f"📌 Первый запуск. Последний пост: #{latest_id}. Жду новые...")
-
     while True:
         try:
             latest_id, post_url = get_latest_post()
@@ -123,5 +113,4 @@ def main():
             log(f"❌ Ошибка: {e}")
         time.sleep(CHECK_INTERVAL)
 
-if __name__ == "__main__":
-    main()
+main()
